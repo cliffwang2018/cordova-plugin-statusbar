@@ -26,6 +26,13 @@
 #import "CDVStatusBar.h"
 #import <objc/runtime.h>
 #import <Cordova/CDVViewController.h>
+#define SCREEN_HEIGHT     [[UIScreen mainScreen] bounds].size.height
+//是否是iPhoneX、iPhoneXS
+#define DT_IS_IPHONEX_XS   (SCREEN_HEIGHT == 812.f)
+//是否是iPhoneXR、iPhoneX Max
+#define DT_IS_IPHONEXR_XSMax   (SCREEN_HEIGHT == 896.f)
+//是否是iPhoneX系列手机
+#define IS_IPHONEX_SET  (DT_IS_IPHONEX_XS||DT_IS_IPHONEXR_XSMax)
 
 static const void *kHideStatusBar = &kHideStatusBar;
 static const void *kStatusBarStyle = &kStatusBarStyle;
@@ -469,6 +476,11 @@ static const void *kStatusBarStyle = &kStatusBarStyle;
 #endif
         }
     }
+    if(IS_IPHONEX_SET){//add by cliff to fixed iphonex issues
+            frame.origin.y = 44.f;
+            frame.size.height = SCREEN_HEIGHT - 64.f;
+            NSLog(@"yes its height %f",SCREEN_HEIGHT);
+        }
     frame.size.height -= frame.origin.y;
     self.webView.frame = frame;
     
